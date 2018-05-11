@@ -1,0 +1,8 @@
+<resources>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/alert_in</item>
+        <item name="android:windowExitAnimation">@anim/alert_out</item>
+    </style>
+
+</resources>
