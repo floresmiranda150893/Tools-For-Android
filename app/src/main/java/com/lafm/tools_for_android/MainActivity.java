@@ -2,11 +2,13 @@ package com.lafm.tools_for_android;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 
 import com.lafm.fingerprint.Fingerprint;
 import com.lafm.fingerprint.IFingerprint;
+import com.lafm.loading.Loading;
 
 public class MainActivity extends Activity {
 
@@ -29,6 +31,13 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 fingerprint();
+            }
+        });
+
+        btn_loading.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loading();
             }
         });
 
@@ -77,6 +86,21 @@ public class MainActivity extends Activity {
 
         if(fingerprint != null)
             fingerprint.stopListening();
+
+    }
+
+    private Loading loading = new Loading(this);
+
+    public void loading(){
+
+        loading.onLoading(true);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loading.onLoading(false);
+            }
+        }, 500);
 
     }
 
