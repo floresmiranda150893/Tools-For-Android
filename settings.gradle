@@ -1,1 +1,1 @@
-include ':app', ':fingerprint', ':loading'
+include ':app', ':fingerprint', ':loading', ':restclient'
