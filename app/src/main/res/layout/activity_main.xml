@@ -28,4 +28,26 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/floatingbutton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="floatingbutton"/>
+
+        <Button
+            android:id="@+id/restclient"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="restclient"
+            android:visibility="invisible"/>
+
+    </LinearLayout>
+
 </LinearLayout>
