@@ -1,4 +1,4 @@
-package floresmiranda1593.gmail.com.restclient;
+package com.lafm.restclient;
 
 import org.junit.Test;
 

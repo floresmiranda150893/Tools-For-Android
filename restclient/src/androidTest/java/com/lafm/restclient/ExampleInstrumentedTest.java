@@ -1,4 +1,4 @@
-package floresmiranda1593.gmail.com.restclient;
+package com.lafm.restclient;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("floresmiranda1593.gmail.com.restclient.test", appContext.getPackageName());
+        assertEquals("com.lafm.restclient.test", appContext.getPackageName());
     }
 }
