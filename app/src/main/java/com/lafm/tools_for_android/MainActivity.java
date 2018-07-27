@@ -68,11 +68,7 @@ public class MainActivity extends Activity {
 
     public void fingerprint(){
 
-        fingerprint = Fingerprint.getInstance(this, new IFingerprint() {
-            @Override
-            public boolean showAlert() {
-                return true;
-            }
+        fingerprint = Fingerprint.getInstance(getApplicationContext(), new IFingerprint() {
 
             @Override
             public void onAuthenticationStart() {
@@ -82,6 +78,7 @@ public class MainActivity extends Activity {
             @Override
             public void onAuthenticationSucceeded() {
                 fingerprint.stopListening();
+                Toast.makeText(context,"onAuthenticationSucceeded",Toast.LENGTH_LONG).show();
             }
 
             @Override

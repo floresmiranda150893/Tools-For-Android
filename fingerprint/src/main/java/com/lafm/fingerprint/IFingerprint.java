@@ -6,8 +6,6 @@ package com.lafm.fingerprint;
 
 public interface IFingerprint {
 
-    boolean showAlert();
-
     void onAuthenticationStart();
 
     void onAuthenticationSucceeded();

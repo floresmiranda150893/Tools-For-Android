@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.PointF;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,7 +45,7 @@ public class FloatingActionsMenu {
         initActionsMenu();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "NewApi"})
     private void initActionsMenu(){
 
         if(vMenu == null){
@@ -120,6 +121,8 @@ public class FloatingActionsMenu {
 
                         break;
                     case MotionEvent.ACTION_UP :
+
+                        Log.e("MotionEvent","ACTION_UP");
 
                         if (System.currentTimeMillis() - lastTouchDown < CLICK_ACTION_THRESHHOLD) {
 

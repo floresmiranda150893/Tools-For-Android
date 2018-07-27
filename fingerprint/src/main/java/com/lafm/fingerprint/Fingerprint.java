@@ -3,6 +3,7 @@ package com.lafm.fingerprint;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.fingerprint.FingerprintManager;
@@ -11,6 +12,7 @@ import android.os.CancellationSignal;
 import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,7 +24,7 @@ public class Fingerprint {
 
     private static final Fingerprint ourInstance = new Fingerprint();
 
-    private Activity context;
+    private Context context;
 
     private IFingerprint iFingerprint;
 
@@ -34,14 +36,8 @@ public class Fingerprint {
 
     private boolean isAvailable;
 
-    private Dialog dialog;
-
-    private TextView message;
-
-    private ImageView ic_fingerprint;
-
     @SuppressLint("NewApi")
-    public static Fingerprint getInstance(Activity context, IFingerprint iFingerprint) {
+    public static Fingerprint getInstance(Context context, IFingerprint iFingerprint) {
 
         ourInstance.context = context;
         ourInstance.iFingerprint = iFingerprint;
@@ -62,25 +58,15 @@ public class Fingerprint {
             ourInstance.fingerprintManager.authenticate(null, ourInstance.cancellationSignal, 0 /* flags */, ourInstance.authenticationCallback, null);
 
             if (ourInstance.iFingerprint != null){
-                if(ourInstance.iFingerprint.showAlert())
-                    ourInstance.showAlert();
-                else
-                    ourInstance.iFingerprint.onAuthenticationStart();
+                ourInstance.iFingerprint.onAuthenticationStart();
             }
 
         }
     }
 
     public void stopListening() {
-        if (ourInstance.isAvailable){
-
-            if (ourInstance.iFingerprint != null)
-                if(ourInstance.iFingerprint.showAlert() && ourInstance.dialog != null)
-                    ourInstance.dialog.cancel();
-
+        if (ourInstance.isAvailable)
             ourInstance.cancellationSignal.cancel();
-
-        }
     }
 
     public boolean isAvailable() {
@@ -98,62 +84,32 @@ public class Fingerprint {
             @Override
             public void onAuthenticationError(int errorCode, CharSequence errString) {
 
-                if (ourInstance.iFingerprint != null){
-
+                if (ourInstance.iFingerprint != null)
                     ourInstance.iFingerprint.onAuthenticationHelp(errString.toString());
-
-                    if(ourInstance.iFingerprint.showAlert() && errorCode == 7){
-                        message.setText(errString.toString());
-                        message.setTextColor(Color.parseColor("#F44336"));
-                        ic_fingerprint.setColorFilter(Color.parseColor("#F44336"));
-                    }
-
-                }
 
             }
 
             @Override
             public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
 
-                if (ourInstance.iFingerprint != null){
-
+                if (ourInstance.iFingerprint != null)
                     ourInstance.iFingerprint.onAuthenticationHelp(helpString.toString());
-
-                    if(ourInstance.iFingerprint.showAlert()){
-                        message.setText(helpString.toString());
-                        message.setTextColor(Color.parseColor("#F44336"));
-                    }
-
-                }
 
             }
 
             @Override
             public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
 
-                if (ourInstance.iFingerprint != null){
-
+                if (ourInstance.iFingerprint != null)
                     ourInstance.iFingerprint.onAuthenticationSucceeded();
-
-                    if(ourInstance.iFingerprint.showAlert())
-                        ic_fingerprint.setColorFilter(Color.parseColor("#28DF03"));
-
-                }
 
             }
 
             @Override
             public void onAuthenticationFailed() {
 
-                if (ourInstance.iFingerprint != null){
-
+                if (ourInstance.iFingerprint != null)
                     ourInstance.iFingerprint.onAuthenticationFailed();
-
-                    if(ourInstance.iFingerprint.showAlert()){
-                        message.setText(R.string.failed_fingerprint);
-                        message.setTextColor(Color.parseColor("#F44336"));
-                    }
-                }
 
             }
         };
@@ -190,30 +146,28 @@ public class Fingerprint {
 
     }
 
-    private void showAlert(){
+    /*Verificar como agregar el funcionamiento encapsulado*/
+    private void showAlert(Context context){
 
-        if(ourInstance.dialog != null && ourInstance.dialog.getWindow() == ourInstance.context.getWindow())
-            ourInstance.dialog.cancel();
-
-        ourInstance.dialog = new Dialog(ourInstance.context);
-        ourInstance.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        ourInstance.dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        ourInstance.dialog.setContentView(R.layout.layout_fingerprint);
-        ourInstance.dialog.setCancelable(false);
-        ourInstance.dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-
-        TextView cancel = (TextView) ourInstance.dialog.findViewById(R.id.cancel);
-        ourInstance.message = (TextView) ourInstance.dialog.findViewById(R.id.message);
-        ourInstance.ic_fingerprint = (ImageView) ourInstance.dialog.findViewById(R.id.ic_fingerprint);
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setContentView(R.layout.layout_fingerprint);
+        dialog.setCancelable(false);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        TextView cancel = (TextView) dialog.findViewById(R.id.cancel);
+        TextView message = (TextView) dialog.findViewById(R.id.message);
+        ImageView ic_fingerprint = (ImageView) dialog.findViewById(R.id.ic_fingerprint);
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ourInstance.stopListening();
+
             }
         });
 
-        ourInstance.dialog.show();
+        dialog.show();
     }
 
 }

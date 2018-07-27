@@ -29,6 +29,4 @@ dependencies {
     implementation project(':loading')
     implementation project(':restclient')
     implementation project(':floatingbutton')
-
-    compile project(path: ':floatingbutton')
 }
