@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PointF;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,18 +18,19 @@ import android.widget.LinearLayout;
 
 public class FloatingActionsMenu {
 
+    private LinearLayout background;
     private LinearLayout layout_menu;
     private LinearLayout layout_opcions;
     private FloatingActionButton button;
     private IFloatingAction [] options;
     private IFloatingAction action;
     private Activity context;
+    private long first_touch;
+    private boolean active_menu;
 
     private ViewGroup vRoot;
     private View vMenu;
     private int rMenu = R.layout.layout_floating_menu;
-    float dX = 0, dY = 0;
-
 
     public FloatingActionsMenu(Activity context, IFloatingAction action){
         this.action = action;
@@ -45,7 +47,7 @@ public class FloatingActionsMenu {
         initActionsMenu();
     }
 
-    @SuppressLint({"ClickableViewAccessibility", "NewApi"})
+    @SuppressLint({"NewApi", "ClickableViewAccessibility"})
     private void initActionsMenu(){
 
         if(vMenu == null){
@@ -55,6 +57,8 @@ public class FloatingActionsMenu {
             vMenu = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                     .inflate(rMenu, null);
 
+            vMenu.setElevation(10);
+
             vRoot.addView(vMenu, 0,
                     new LayoutParams(
                             LayoutParams.MATCH_PARENT,
@@ -62,6 +66,8 @@ public class FloatingActionsMenu {
 
         }
 
+
+        background = (LinearLayout) vMenu.findViewById(R.id.background);
         layout_menu = (LinearLayout) vMenu.findViewById(R.id.layout_menu);
         layout_opcions = (LinearLayout) vMenu.findViewById(R.id.layout_opcions);
         button = (FloatingActionButton) vMenu.findViewById(R.id.favoritos);
@@ -71,6 +77,8 @@ public class FloatingActionsMenu {
             public void onAnimationEnd(Animator animation) {
                 layout_opcions.setVisibility(View.VISIBLE);
                 action.onAction(true);
+                background.setVisibility(View.VISIBLE);
+                active_menu = true;
             }
         });
 
@@ -78,18 +86,19 @@ public class FloatingActionsMenu {
         layout_menu.setOnTouchListener(new View.OnTouchListener() {
 
             private PointF DownPT = new PointF();
-            private long lastTouchDown;
-            private int CLICK_ACTION_THRESHHOLD = 100;
+            private int CLICK_ACTION_THRESHHOLD = 80;
 
             @Override public boolean onTouch(View view, MotionEvent event) {
                 int eid = event.getAction();
+
 
                 switch (eid) {
                     case MotionEvent.ACTION_DOWN :
 
                         setLocation(layout_menu, event);
 
-                        lastTouchDown = System.currentTimeMillis();
+                        first_touch = System.currentTimeMillis();
+
                         DownPT.x = view.getX() - event.getRawX();
                         DownPT.y = view.getY() - event.getRawY();
 
@@ -98,6 +107,7 @@ public class FloatingActionsMenu {
 
                         if(layout_opcions.getVisibility() == View.VISIBLE){
                             layout_opcions.setVisibility(View.INVISIBLE);
+                            background.setVisibility(View.GONE);
                             break;
                         }
 
@@ -106,31 +116,40 @@ public class FloatingActionsMenu {
                         int parentHeight = viewParent.getHeight();
 
                         float newX = event.getRawX() + DownPT.x;
-                        newX = Math.max(0, newX); // Don't allow the FAB past the top of the parent
-                        newX = Math.min(parentWidth - view.getWidth(), newX); // Don't allow the FAB past the bottom of the parent
+                        newX = Math.max(0, newX);
+                        newX = Math.min(parentWidth - view.getWidth(), newX);
 
                         float newY = event.getRawY() + DownPT.y;
-                        newY = Math.max((layout_opcions.getHeight()) * -1, newY); // Don't allow the FAB past the top of the parent
-                        newY = Math.min(parentHeight - view.getHeight(), newY); // Don't allow the FAB past the bottom of the parent
+                        newY = Math.max((layout_opcions.getHeight()) * -1, newY);
+                        newY = Math.min(parentHeight - view.getHeight(), newY);
 
                         layout_menu.setX(newX);
                         layout_menu.setY(newY);
 
-                        if (System.currentTimeMillis() - lastTouchDown > 80)
-                            lastTouchDown = 0;
+                        if (System.currentTimeMillis() - first_touch > 80)
+                            first_touch = 0;
 
                         break;
                     case MotionEvent.ACTION_UP :
 
-                        Log.e("MotionEvent","ACTION_UP");
+                        if(active_menu){
+                            active_menu = false;
+                            return true;
+                        }
 
-                        if (System.currentTimeMillis() - lastTouchDown < CLICK_ACTION_THRESHHOLD) {
+                        if (System.currentTimeMillis() - first_touch < CLICK_ACTION_THRESHHOLD) {
 
                             if(layout_opcions.getVisibility() == View.VISIBLE){
                                 action.onAction(false);
                                 layout_opcions.setVisibility(View.INVISIBLE);
-                            }
-                            else
+                                background.setVisibility(View.GONE);
+
+                                new Handler().postDelayed(new Runnable() { public void run(){
+                                    active_menu = false;
+                                }}, 1);
+
+                                break;
+                            }else
                                 restarLocation();
 
                         }
@@ -145,6 +164,10 @@ public class FloatingActionsMenu {
 
         if(options != null)
             for(int i=0; i<options.length; i++){
+
+                //View layout = LayoutInflater.from(context).inflate(R.layout.layout_floating_menu, null, false);
+
+
 
                 final IFloatingAction opction = options[i];
 
@@ -202,9 +225,7 @@ public class FloatingActionsMenu {
     }
 
     private void restarLocation(){
-
         layout_menu.animate().x(orgX).y(orgY).setDuration(150).start();
-
     }
 
 }
