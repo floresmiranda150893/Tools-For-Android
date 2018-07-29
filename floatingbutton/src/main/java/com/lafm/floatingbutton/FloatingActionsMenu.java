@@ -165,7 +165,7 @@ public class FloatingActionsMenu {
         if(options != null)
             for(int i=0; i<options.length; i++){
 
-                //View layout = LayoutInflater.from(context).inflate(R.layout.layout_floating_menu, null, false);
+                View layout = LayoutInflater.from(context).inflate(R.layout.layout_floating_menu, null, false);
 
 
 
