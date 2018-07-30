@@ -27,7 +27,6 @@ import javax.net.ssl.TrustManagerFactory;
  * Created by Luis FM on 26/02/2018.
  */
 
-
 public class RESTClient{
 
     private static String TAG = "RESTClient";
@@ -43,10 +42,10 @@ public class RESTClient{
     private String URL;
 
     public RESTClient(String URL, InputStream certificate) {
+        this.URL = URL;
 
         Log.e(TAG, URL);
 
-        this.URL = URL;
         setCertificate(certificate);
     }
 
@@ -68,9 +67,9 @@ public class RESTClient{
 
         long startTime = System.currentTimeMillis();
 
-        Log.e(TAG,TAG_LIMIT + "POST" + TAG_LIMIT);
+        Log.e(TAG, TAG_LIMIT + "POST" + TAG_LIMIT);
 
-        Log.e(TAG,"request (0:00)\t"+ dataJSON);
+        Log.e(TAG, "request (0:00)\t"+ dataJSON);
 
         InputStream inputStream = null;
         InputStream inputStream_conection = null;
@@ -126,8 +125,6 @@ public class RESTClient{
 
                 result = sb.toString();
 
-                Log.e(this.getClass().getSimpleName() + " result => ", result);
-
             }
 
         }
@@ -154,7 +151,7 @@ public class RESTClient{
 
         long elapsedTime = System.currentTimeMillis() - startTime;
 
-        Log.e("getResponse", "result  (" + formatTime(elapsedTime) + ")\t" + result);
+        Log.e(TAG, "response  (" + formatTime(elapsedTime) + ")\t" + result);
 
         return result;
 
@@ -162,10 +159,11 @@ public class RESTClient{
 
     public String _GET() {
 
-        Log.e(this.getClass().getSimpleName() ,  TAG_LIMIT + "GET" + TAG_LIMIT);
+        long startTime = System.currentTimeMillis();
 
+        Log.e(TAG, TAG_LIMIT + "GET" + TAG_LIMIT);
 
-        Log.e(this.getClass().getSimpleName() + " urlApi => ", URL);
+        Log.e(TAG, "request (0:00)\t");
 
         InputStream inputStream = null;
         InputStream inputStream_conection = null;
@@ -251,6 +249,10 @@ public class RESTClient{
 
         }
 
+        long elapsedTime = System.currentTimeMillis() - startTime;
+
+        Log.e(TAG, "response  (" + formatTime(elapsedTime) + ")\t" + result);
+
         return result;
 
     }
@@ -321,4 +323,3 @@ public class RESTClient{
     }
 
 }
-
