@@ -3,10 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Tools-For-Android.iml" filepath="$PROJECT_DIR$/Tools-For-Android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ToolsForAndroid.iml" filepath="$PROJECT_DIR$/ToolsForAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/fingerprint/fingerprint.iml" filepath="$PROJECT_DIR$/fingerprint/fingerprint.iml" />
       <module fileurl="file://$PROJECT_DIR$/floatingbutton/floatingbutton.iml" filepath="$PROJECT_DIR$/floatingbutton/floatingbutton.iml" />
+      <module fileurl="file://$PROJECT_DIR$/listfragment/listfragment.iml" filepath="$PROJECT_DIR$/listfragment/listfragment.iml" />
       <module fileurl="file://$PROJECT_DIR$/loading/loading.iml" filepath="$PROJECT_DIR$/loading/loading.iml" />
       <module fileurl="file://$PROJECT_DIR$/restclient/restclient.iml" filepath="$PROJECT_DIR$/restclient/restclient.iml" />
     </modules>

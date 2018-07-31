@@ -1,1 +1,1 @@
-include ':app', ':fingerprint', ':loading', ':restclient', ':restclient', ':floatingbutton'
+include ':app', ':fingerprint', ':loading', ':restclient', ':restclient', ':floatingbutton', ':listfragment'
